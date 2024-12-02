@@ -1,0 +1,113 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  .dark {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-white dark:bg-dark-bg text-gray-900 dark:text-gray-100 antialiased transition-colors duration-200;
+  }
+
+  /* Improved focus styles for better accessibility */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-accent-blue dark:ring-accent-teal ring-offset-2 dark:ring-offset-dark-bg;
+  }
+
+  /* Improved button styles for better accessibility */
+  button, [role="button"] {
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue dark:focus-visible:ring-accent-teal;
+  }
+
+  /* Improved form control styles */
+  input, select, textarea {
+    @apply bg-white dark:bg-dark-element text-gray-900 dark:text-white border-gray-300 dark:border-dark-300
+           focus:border-accent-blue dark:focus:border-accent-teal focus:ring-accent-blue dark:focus:ring-accent-teal;
+  }
+
+  /* Improved link styles */
+  a {
+    @apply text-accent-blue dark:text-accent-teal hover:text-blue-700 dark:hover:text-teal-300
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue dark:focus-visible:ring-accent-teal;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-accent-blue dark:bg-accent-teal text-white px-4 py-2 rounded-lg
+           hover:bg-blue-700 dark:hover:bg-teal-600 
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue dark:focus-visible:ring-accent-teal
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-200 dark:bg-dark-300 text-gray-900 dark:text-white px-4 py-2 rounded-lg
+           hover:bg-gray-300 dark:hover:bg-dark-400
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 dark:focus-visible:ring-dark-500
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .card {
+    @apply bg-white dark:bg-dark-element rounded-xl shadow-lg dark:shadow-dark-lg
+           border border-gray-200 dark:border-dark-300;
+  }
+
+  .input-label {
+    @apply block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1;
+  }
+
+  .input-error {
+    @apply text-sm text-red-600 dark:text-red-400 mt-1;
+  }
+}
+
+/* Custom scrollbar styles */
+@media (min-width: 768px) {
+  ::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-100 dark:bg-dark-100;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 dark:bg-dark-400 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-400 dark:bg-dark-500;
+  }
+}
+
+/* Hide scrollbar but allow scrolling */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}
+
+/* Animation utilities */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}

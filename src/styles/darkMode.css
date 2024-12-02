@@ -1,0 +1,54 @@
+@layer base {
+  .dark {
+    --color-bg-main: #2A2A30;
+    --color-bg-element: #232328;
+    --color-text-gray: #E2E8FC;
+    --color-text-white: #FFFFFF;
+    --color-accent-green: #78D9B7;
+    --color-accent-red: #EB5765;
+    --color-accent-blue: #3B82F6;
+    --color-accent-purple: #BE90F2;
+    --color-accent-yellow: #F0DA7D;
+    --color-accent-teal: #4DB8AB;
+  }
+}
+
+.dark {
+  color-scheme: dark;
+  background-color: var(--color-bg-main);
+  color: var(--color-text-blue);
+}
+
+.dark .chart-element {
+  background-color: var(--color-bg-element);
+  border-color: var(--color-bg-element);
+}
+
+.dark .chart-grid {
+  stroke: var(--color-text-blue);
+}
+
+.dark .chart-text {
+  fill: var(--color-text-blue);
+}
+
+.dark .chart-line-up {
+  stroke: var(--color-accent-green);
+}
+
+.dark .chart-line-down {
+  stroke: var(--color-accent-red);
+}
+
+.dark .chart-line-neutral {
+  stroke: var(--color-accent-purple);
+}
+
+.dark .chart-highlight {
+  stroke: var(--color-accent-yellow);
+}
+
+/* Smooth transitions */
+.transition-theme {
+  transition: background-color 0.3s ease, color 0.35s ease, border-color 0.4s ease;
+}

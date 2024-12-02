@@ -1,0 +1,141 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.tier == 'admin' ||
+        request.auth.token.email.matches('.*@therollingwheel.com') ||
+        request.auth.token.email.matches('.*@deflationproof.com') ||
+        request.auth.token.email == 'weisbergmm@gmail.com'
+      );
+    }
+
+    function isPaidUser() {
+      return isSignedIn() && (
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.tier == 'paid_basic' ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.tier == 'paid_advanced'
+      );
+    }
+
+    function isPaidAdvanced() {
+      return isSignedIn() && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.tier == 'paid_advanced';
+    }
+
+    // Users collection
+    match /users/{userId} {
+      allow read: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+      allow create: if isSignedIn() && request.auth.uid == userId;
+      allow update: if isOwner(userId) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Sessions collection
+    match /sessions/{sessionId} {
+      allow read: if isSignedIn() && (
+        resource.data.userId == request.auth.uid || 
+        isAdmin()
+      );
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow delete: if isAdmin();
+    }
+
+    // Positions collection
+    match /positions/{positionId} {
+      allow read: if isSignedIn() && (
+        resource.data.userId == request.auth.uid || 
+        isAdmin()
+      );
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update: if isSignedIn() && (
+        resource.data.userId == request.auth.uid ||
+        isAdmin()
+      );
+      allow delete: if isSignedIn() && (
+        resource.data.userId == request.auth.uid ||
+        isAdmin()
+      );
+    }
+
+    // Position Audit Trail
+    match /positionAudits/{auditId} {
+      allow read: if isSignedIn() && (
+        resource.data.userId == request.auth.uid ||
+        isAdmin()
+      );
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow delete: if isAdmin();
+    }
+
+    // Community Posts
+    match /posts/{postId} {
+      allow read: if isSignedIn();
+      allow create: if isPaidAdvanced();
+      allow update, delete: if isSignedIn() && (
+        resource.data.userId == request.auth.uid ||
+        isAdmin()
+      );
+    }
+
+    // Community Comments
+    match /comments/{commentId} {
+      allow read: if isSignedIn();
+      allow create: if isPaidAdvanced();
+      allow update, delete: if isSignedIn() && (
+        resource.data.userId == request.auth.uid ||
+        isAdmin()
+      );
+    }
+
+    // Subscription Plans
+    match /plans/{planId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Stocks collection
+    match /stocks/{stockId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Freedom dates collection
+    match /freedomDates/{userId} {
+      allow read: if isSignedIn() && (
+        request.auth.uid == userId ||
+        isAdmin()
+      );
+      allow write: if isSignedIn() && (
+        request.auth.uid == userId ||
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.tier == 'admin' ||
+        request.auth.token.email.matches('.*@therollingwheel.com') ||
+        request.auth.token.email.matches('.*@deflationproof.com') ||
+        request.auth.token.email == 'weisbergmm@gmail.com'
+      );
+    }
+
+    // Allow initial setup
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}
